@@ -1,11 +1,4 @@
 ---
-- hosts: rke2_cluster
-  roles:
-    - role: common/init
-      become: true
-
-- name: Playbook for rke2-ansible
-  import_playbook: playbooks/site.yml
 
 - hosts: rke2_servers
   vars_files:
