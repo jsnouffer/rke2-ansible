@@ -7,12 +7,19 @@
 - name: Playbook for rke2-ansible
   import_playbook: playbooks/site.yml
 
-# - hosts: rke2_servers
-#   vars_files:
-#     - inventory/skaro/group_vars/vault.yaml
-#   roles:
-#     - role: k8s/secrets
-#       become: true
+- hosts: rke2_servers[0]
+  vars_files:
+    - inventory/skaro/group_vars/vault.yaml
+  roles:
+    - role: k8s/nodes
+      become: true
+
+- hosts: rke2_servers[0]
+  vars_files:
+    - inventory/skaro/group_vars/vault.yaml
+  roles:
+    - role: k8s/secrets
+      become: true
 
 # - hosts: localhost
 #   vars_files:
