@@ -1,7 +1,7 @@
 ---
 - name: CIS MODE
   become: yes
-  when: rke2_config.profile | default("") | regex_search('cis-\\d+.\\d+')
+  when: rke2_config.profile | default("") | regex_search('^cis(-\\d+.\\d+)?$')
   block:
 
     - name: Create etcd group
@@ -13,7 +13,7 @@
       ansible.builtin.user:
         name: etcd
         comment: etcd user
-        shell: /bin/nologin
+        shell: /usr/sbin/nologin
         group: etcd
         create_home: false
 
@@ -27,6 +27,7 @@
       when:
         - ansible_os_family == 'RedHat' or ansible_os_family == 'Rocky'
         - not rke2_binary_tarball_check.stat.exists
+        - rke2_tarball_url is not defined or rke2_tarball_url == ""
 
     - name: Copy systemctl file for kernel hardening for non-yum installs
       ansible.builtin.copy:
@@ -38,7 +39,8 @@
       when: >-
         (ansible_facts['os_family'] != 'RedHat' and
         ansible_facts['os_family'] != 'Rocky') or
-        rke2_binary_tarball_check.stat.exists
+        rke2_binary_tarball_check.stat.exists or
+        (rke2_tarball_url is defined and rke2_tarball_url != "")
 
     - name: Restart systemd-sysctl
       ansible.builtin.service:
