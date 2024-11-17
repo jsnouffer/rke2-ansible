@@ -11,3 +11,4 @@ rke2.linux-amd64.tar.gz
 
 tarball_install/*
 !tarball_install/README.md
+logs/

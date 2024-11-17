@@ -8,7 +8,7 @@ init: ## initialize environment
 	ansible-galaxy collection install -r ./requirements.yml
 
 configure: ## configure rke cluster
-	ansible-playbook -v --vault-password-file ~/.vault-password site.yml
+	ansible-playbook -v --vault-password-file ~/.vault-password site.yml 2>&1 | tee logs/$$(date '+%Y_%m_%d_%H%M').log
 
 run-k8s-role:
 	ansible-playbook --vault-password-file ~/.vault-password kubernetes.yml
@@ -21,7 +21,7 @@ get-kube-config: ## download kubeconfig file
 	KUBECONFIG=/tmp/skaro-kubeconfig:~/.kube/config kubectl config view --flatten > ~/.kube/config
 
 edit-vault: ## edit ansible-vault vars file
-	ansible-vault edit --vault-password-file ~/.vault-password inventory/skaro/group_vars/vault.yaml
+	ansible-vault edit --vault-password-file ~/.vault-password inventory/skaro/group_vars/all/vault.yaml
 
 view-vault: ## view ansible-vault vars file
-	ansible-vault view --vault-password-file ~/.vault-password inventory/skaro/group_vars/vault.yaml
+	ansible-vault view --vault-password-file ~/.vault-password inventory/skaro/group_vars/all/vault.yaml
