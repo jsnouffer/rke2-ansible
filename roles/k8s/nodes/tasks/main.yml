@@ -6,7 +6,7 @@
 - name: Install required python libraries
   pip:
     name:
-      - kubernetes >= 12.0.0
+      - kubernetes >= 29.0.0
 
 - include_tasks: node.yml
   loop: "{{ hostvars | dict2items }}"
