@@ -1,15 +1,15 @@
 ---
-- name: "Check for images tar.gz in {{ playbook_dir }}/tarball_install/rke2-images.linux-amd64.tar.gz"  # noqa name[template] yaml[line-length]
+- name: "Check for images tar.gz in {{ playbook_dir }}/tarball_install/rke2-images.linux-{{ cpu_arch.stdout }}.tar.gz"  # noqa name[template] yaml[line-length]
   ansible.builtin.stat:
-    path: "{{ playbook_dir }}/tarball_install/rke2-images.linux-amd64.tar.gz"
+    path: "{{ playbook_dir }}/tarball_install/rke2-images.linux-{{ cpu_arch.stdout }}.tar.gz"
     get_checksum: false
   register: got_images_gz
   delegate_to: 127.0.0.1
   become: false
 
-- name: "Check for images tar.zst in {{ playbook_dir }}/tarball_install/rke2-images.linux-amd64.tar.zst"  # noqa name[template] yaml[line-length]
+- name: "Check for images tar.zst in {{ playbook_dir }}/tarball_install/rke2-images.linux-{{ cpu_arch.stdout }}.tar.zst"  # noqa name[template] yaml[line-length]
   ansible.builtin.stat:
-    path: "{{ playbook_dir }}/tarball_install/rke2-images.linux-amd64.tar.zst"
+    path: "{{ playbook_dir }}/tarball_install/rke2-images.linux-{{ cpu_arch.stdout }}.tar.zst"
     get_checksum: false
   register: got_images_zst
   delegate_to: 127.0.0.1
@@ -32,14 +32,14 @@
 
 - name: Add images tar.gz to needed directory if provided
   ansible.builtin.copy:
-    src: "{{ playbook_dir }}/tarball_install/rke2-images.linux-amd64.tar.gz"
+    src: "{{ playbook_dir }}/tarball_install/rke2-images.linux-{{ cpu_arch.stdout }}.tar.gz"
     dest: /var/lib/rancher/rke2/agent/images/
     mode: '0644'
   when: got_images_gz.stat.exists
 
 - name: Add images tar.zst to needed directory if provided
   ansible.builtin.copy:
-    src: "{{ playbook_dir }}/tarball_install/rke2-images.linux-amd64.tar.zst"
+    src: "{{ playbook_dir }}/tarball_install/rke2-images.linux-{{ cpu_arch.stdout }}.tar.zst"
     dest: /var/lib/rancher/rke2/agent/images/
     mode: '0644'
   when: got_images_zst.stat.exists

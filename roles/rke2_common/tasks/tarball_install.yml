@@ -20,8 +20,8 @@
 
 - name: Send provided tarball if available
   ansible.builtin.copy:
-    src: "{{ playbook_dir }}/tarball_install/rke2.linux-amd64.tar.gz"
-    dest: "{{ temp_dir.path }}/rke2.linux-amd64.tar.gz"
+    src: "{{ playbook_dir }}/tarball_install/rke2.linux-{{ cpu_arch.stdout }}.tar.gz"
+    dest: "{{ temp_dir.path }}/rke2.linux-{{ cpu_arch.stdout }}.tar.gz"
     mode: '0644'
   when:
     - rke2_binary_tarball_check.stat.exists
@@ -30,7 +30,7 @@
 - name: Download Tar from provided URL
   ansible.builtin.get_url:
     url: "{{ rke2_tarball_url }}"
-    dest: "{{ temp_dir.path }}/rke2.linux-amd64.tar.gz"
+    dest: "{{ temp_dir.path }}/rke2.linux-{{ cpu_arch.stdout }}.tar.gz"
     mode: "0644"
   when:
     - not rke2_binary_tarball_check.stat.exists
@@ -47,8 +47,8 @@
 
 - name: TARBALL | Download the tarball
   ansible.builtin.get_url:
-    url: https://github.com/rancher/rke2/releases/download/{{ rke2_full_version }}/rke2.linux-amd64.tar.gz
-    dest: "{{ temp_dir.path }}/rke2.linux-amd64.tar.gz"
+    url: https://github.com/rancher/rke2/releases/download/{{ rke2_full_version }}/rke2.linux-{{ cpu_arch.stdout }}.tar.gz
+    dest: "{{ temp_dir.path }}/rke2.linux-{{ cpu_arch.stdout }}.tar.gz"
     mode: "0644"
   when:
     - not rke2_binary_tarball_check.stat.exists
@@ -67,7 +67,7 @@
   block:
     - name: Unarchive tarball into temp location
       ansible.builtin.unarchive:
-        src: "{{ temp_dir.path }}/rke2.linux-amd64.tar.gz"
+        src: "{{ temp_dir.path }}/rke2.linux-{{ cpu_arch.stdout }}.tar.gz"
         dest: "{{ temp_dir.path }}"
         remote_src: true
 
@@ -118,7 +118,7 @@
 
     - name: Unarchive rke2 tar
       ansible.builtin.unarchive:
-        src: "{{ temp_dir.path }}/rke2.linux-amd64.tar.gz"
+        src: "{{ temp_dir.path }}/rke2.linux-{{ cpu_arch.stdout }}.tar.gz"
         dest: "{{ tarball_dir }}"
         remote_src: true
 

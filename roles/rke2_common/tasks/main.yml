@@ -3,6 +3,10 @@
 - name: Populate service facts
   ansible.builtin.service_facts: {}
 
+- name: Get DEB architecture
+  shell: dpkg --print-architecture
+  register: cpu_arch
+
 - name: Gather the package facts
   ansible.builtin.package_facts:
     manager: auto
@@ -13,9 +17,9 @@
 - name: Include images_tarball_install.yml
   ansible.builtin.include_tasks: images_tarball_install.yml
 
-- name: "Check for binary tarball in tarball_install/rke2.linux-amd64.tar.gz"
+- name: "Check for binary tarball in tarball_install/rke2.linux-{{ cpu_arch.stdout }}.tar.gz"
   ansible.builtin.stat:
-    path: "{{ playbook_dir }}/tarball_install/rke2.linux-amd64.tar.gz"
+    path: "{{ playbook_dir }}/tarball_install/rke2.linux-{{ cpu_arch.stdout }}.tar.gz"
   register: rke2_binary_tarball_check
   delegate_to: 127.0.0.1
   become: false
